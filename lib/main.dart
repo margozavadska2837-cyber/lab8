@@ -11,20 +11,20 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'lab9',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.pink),
           useMaterial3: false,
           inputDecorationTheme: const InputDecorationTheme(
             border: OutlineInputBorder(),
           ),
           textTheme: const TextTheme(
-            titleLarge: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            titleLarge: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFFEC40AB)),
             bodyMedium: TextStyle(fontSize: 16),
           ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blue,
+            backgroundColor: Colors.pink,
             foregroundColor: Colors.white,
             textStyle: const TextStyle(fontSize: 16),
           ),
@@ -32,12 +32,13 @@ class MyApp extends StatelessWidget {
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: OutlinedButton.styleFrom(
             textStyle: const TextStyle(fontSize: 16),
-            side: const BorderSide(color: Colors.blue),
+            side: const BorderSide(color: Colors.pink),
+            foregroundColor: Colors.pink
           ),
         ),
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
-            foregroundColor: Colors.blue,
+            foregroundColor: Colors.pink,
           )
         )
       ),

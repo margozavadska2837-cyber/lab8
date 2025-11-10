@@ -1,7 +1,42 @@
 import 'package:flutter/material.dart';
 
-class SignupScreen extends StatelessWidget {
+class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
+
+  @override
+  State<SignupScreen> createState() => _SignupScreenState();
+}
+
+class _SignupScreenState extends State<SignupScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  bool _isValidEmail(String email) {
+    return RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(email);
+  }
+
+  void _signup() {
+    if (_formKey.currentState!.validate()) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text("Message"),
+          content: const Text(
+            "Sign up successful",
+            style: TextStyle(color: Color(0xFFEC40AB)),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Ok'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -9,91 +44,87 @@ class SignupScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Image.asset(
-                "assets/images/flutter_logo.png",
-                height: 100,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                  "Sign up",
-                  style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(height: 24),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.asset(
+                    "assets/images/flutter_logo.png",
+                    height: 100
+                ),
+                const SizedBox(height: 16),
+                Text(
+                    "Sign up",
+                    style: Theme.of(context).textTheme.titleLarge
+                ),
+                const SizedBox(height: 24),
 
-              Align(
-                alignment: Alignment.centerLeft,
-              ),
-              const SizedBox(height: 4),
-              const TextField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                  labelText: "Name"
+                TextFormField(
+                  controller: _nameController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: "Name",
                   ),
-              ),
-              const SizedBox(height: 24),
+                  validator: (value) =>
+                  value == null || value.isEmpty ? 'Enter your name' : null,
+                ),
+                const SizedBox(height: 24),
 
-              Align(
-                alignment: Alignment.centerLeft,
-              ),
-              const SizedBox(height: 4),
-              const TextField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                  labelText: "Email"
+                TextFormField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: "Email",
                   ),
-              ),
-              const SizedBox(height: 24),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Enter your email';
+                    } else if (!_isValidEmail(value)) {
+                      return 'Invalid email format';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 24),
 
-              Align(
-                alignment: Alignment.centerLeft,
-              ),
-              const SizedBox(height: 4),
-              const TextField(
+                TextFormField(
+                  controller: _passwordController,
                   obscureText: true,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                  labelText: "Password"
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: "Password",
                   ),
-              ),
-              const SizedBox(height: 24),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Enter password';
+                    } else if (value.length < 7) {
+                      return 'At least 7 characters';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 24),
 
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: ElevatedButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (ctx) => AlertDialog(
-                        title: Text("Message"),
-                        content: Text("Need to implement"),
-                        actions: [
-                          TextButton(
-                              onPressed: () => Navigator.pop(context, 'Ok'),
-                              child: Text('Ok'),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                  child: const Text("Sign up"),
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: ElevatedButton(
+                    onPressed: _signup,
+                    child: const Text("Sign up"),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 12),
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: OutlinedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text("Back"),
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: OutlinedButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("Back"),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
