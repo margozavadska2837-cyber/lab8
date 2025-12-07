@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../services/http_service.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -13,18 +14,26 @@ class _SignupScreenState extends State<SignupScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  final HttpService http = HttpService();
+
   bool _isValidEmail(String email) {
     return RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(email);
   }
 
-  void _signup() {
+  void _signup() async {
     if (_formKey.currentState!.validate()) {
+      await http.sendSignup(
+        _nameController.text,
+        _emailController.text,
+        _passwordController.text,
+      );
+
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
           title: const Text("Message"),
           content: const Text(
-            "Sign up successful",
+            "Sign up sent!",
             style: TextStyle(color: Color(0xFFEC40AB)),
           ),
           actions: [
@@ -49,15 +58,9 @@ class _SignupScreenState extends State<SignupScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Image.asset(
-                    "assets/images/flutter_logo.png",
-                    height: 100
-                ),
+                Image.asset("assets/images/flutter_logo.png", height: 100),
                 const SizedBox(height: 16),
-                Text(
-                    "Sign up",
-                    style: Theme.of(context).textTheme.titleLarge
-                ),
+                Text("Sign up", style: Theme.of(context).textTheme.titleLarge),
                 const SizedBox(height: 24),
 
                 TextFormField(
@@ -95,14 +98,8 @@ class _SignupScreenState extends State<SignupScreen> {
                     border: OutlineInputBorder(),
                     labelText: "Password",
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Enter password';
-                    } else if (value.length < 7) {
-                      return 'At least 7 characters';
-                    }
-                    return null;
-                  },
+                  validator: (value) =>
+                  value != null && value.length >= 7 ? null : 'At least 7 characters',
                 ),
                 const SizedBox(height: 24),
 

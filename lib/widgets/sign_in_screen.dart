@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../services/http_service.dart';
 import './reset_password_screen.dart';
 import './signup_screen.dart';
 
@@ -13,15 +14,21 @@ class _SignInScreenState extends State<SignInScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final HttpService http = HttpService();
 
-  void _login() {
+  void _login() async {
     if (_formKey.currentState!.validate()) {
+      await http.sendLogin(
+        _nameController.text,
+        _passwordController.text,
+      );
+
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
           title: const Text('Message'),
           content: const Text(
-            "Login successful",
+            "Login sent!",
             style: TextStyle(color: Color(0xFFEC40AB)),
           ),
           actions: [
@@ -60,12 +67,8 @@ class _SignInScreenState extends State<SignInScreen> {
                   border: OutlineInputBorder(),
                   labelText: "Name",
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your name';
-                  }
-                  return null;
-                },
+                validator: (value) =>
+                value == null || value.isEmpty ? 'Please enter your name' : null,
               ),
               const SizedBox(height: 24),
 
@@ -121,7 +124,9 @@ class _SignInScreenState extends State<SignInScreen> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const ResetPasswordScreen()),
+                            MaterialPageRoute(
+                              builder: (context) => const ResetPasswordScreen(),
+                            ),
                           );
                         },
                         child: const Text("Reset password"),

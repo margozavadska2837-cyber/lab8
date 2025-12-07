@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../services/http_service.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   const ResetPasswordScreen({super.key});
@@ -10,20 +11,27 @@ class ResetPasswordScreen extends StatefulWidget {
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
+  final HttpService http = HttpService();
 
   bool _isValidEmail(String email) {
     return RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(email);
   }
 
-  void _resetPassword() {
+  void _resetPassword() async {
     if (_formKey.currentState!.validate()) {
+      await http.sendReset(_emailController.text);
+
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text("Message"),
+          title: const Text(
+              "Message"
+          ),
           content: const Text(
-            "Password reset link sent",
-            style: TextStyle(color: Color(0xFFEC40AB)),
+            "Reset sent!",
+            style: TextStyle(
+                color: Color(0xFFEC40AB)
+            ),
           ),
           actions: [
             TextButton(
@@ -40,7 +48,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        padding: const EdgeInsets.symmetric(
+            horizontal: 16.0
+        ),
         child: Center(
           child: Form(
             key: _formKey,
